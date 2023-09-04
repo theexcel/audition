@@ -115,7 +115,9 @@ const App: React.FC = () => {
                 checked={checked} 
                 onChange={() => handleCheck(id)}
                 />
-                <label>{task}</label>
+                <label
+                onChange={() => handleCheck(id)}
+                >{task}</label>
               </div>
             </li>
           ))}
