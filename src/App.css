@@ -42,3 +42,24 @@ input{
 label {
   margin-left: 10px;
 }
+
+button {
+  width: 15rem;
+  height: 30px;
+  margin-top: 2rem;
+  background: blue;
+  border: none;
+  border-radius: 4px;
+  color: white
+}
+
+.category-header > div{
+  background: black;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;padding: 3px;
+}
