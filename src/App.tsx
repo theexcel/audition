@@ -172,7 +172,7 @@ const App: React.FC = () => {
     )}
     <div style = {{display: lockedCategory ? 'none': 'flex', marginTop: '1rem'}}>{fact}</div>
 <Link to = {lockedCategory ? '/' : '/complete'}>
-<button style = {{width: '10rem', height: '2rem', marginTop: '2rem'}} 
+<button style = {{width: '10rem', height: '2rem', marginTop: '1rem', background: 'blue', border: 'none', borderRadius: '4px', fontWeight: 'bold', color: 'white'}} 
 disabled={lockedCategory !== null}
 >Finish</button>
 </Link>
