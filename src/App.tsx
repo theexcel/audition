@@ -82,6 +82,8 @@ const initialData: itemList[] = [
 ]
 
 const App: React.FC = () => {
+
+  const [fact, setFact] = useState<string>('');
   const [items, setItems] = useState<itemList[]>(() => {
     const savedData = localStorage.getItem('items');
     return savedData ? JSON.parse(savedData) : initialData
@@ -120,6 +122,17 @@ const App: React.FC = () => {
 
   }, [items])
 
+  useEffect(() => {
+    fetch('https://uselessfacts.jsph.pl/random.json')
+    .then((response) => response.json())
+    .then((data) => {
+      setFact(data.text)
+    })
+    .catch((error) => {
+      console.log('Error hetching random fact:', error)
+    })
+  }, [])
+
 
 
   return (
@@ -157,8 +170,9 @@ const App: React.FC = () => {
     {lockedCategory && (
       <p>Next phase: {lockedCategory}</p>
     )}
+    <div style = {{display: lockedCategory ? 'none': 'flex', marginTop: '1rem'}}>{fact}</div>
 <Link to = {lockedCategory ? '/' : '/complete'}>
-<button style = {{width: '10rem', height: '2rem', marginTop: '3rem'}} 
+<button style = {{width: '10rem', height: '2rem', marginTop: '2rem'}} 
 disabled={lockedCategory !== null}
 >Finish</button>
 </Link>
