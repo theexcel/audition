@@ -1,11 +1,13 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import Icon from './checkmark.svg'
+import {Link} from 'react-router-dom'
 
 type taskType = {
   id: number,
-  task: string
-  checked: boolean
+  task: string,
+  checked: boolean,
+  closed: boolean
 }
 
 type itemList = {
@@ -20,22 +22,26 @@ const initialData: itemList[] = [
       {
         id: 11,
         task: "Setup virtual office",
-        checked: false
+        checked: false,
+        closed: false
       },
       {
         id: 12,
         task: "Set mission & vision",
-        checked: false
+        checked: false,
+        closed: false,
       },
       {
         id: 13,
         task: "Select business name",
         checked: false,
+        closed: false,
       },
       {
         id: 14,
         task: "Buy domains",
         checked: false,
+        closed: false,
       },
     ],
   },
@@ -46,11 +52,13 @@ const initialData: itemList[] = [
         id: 15,
         task: "Create roadmap",
         checked: false,
+        closed: false,
       },
       {
         id: 16,
         task: "Competitor analysis",
         checked: false,
+        closed: false,
       },
     ],
   },
@@ -61,11 +69,13 @@ const initialData: itemList[] = [
         id: 17,
         task: "Release marketing website",
         checked: false,
+        closed: false,
       },
       {
         id: 18,
         task: "Release MVP",
-        checked: false
+        checked: false,
+        closed: false
       },
     ],
   },
@@ -78,6 +88,8 @@ const App: React.FC = () => {
   }
   )
 
+  const [lockedCategory, setLockedCategory] = useState<string | null>(null)
+
   useEffect(() => {
     localStorage.setItem('items', JSON.stringify(items))
   }, [items])
@@ -86,12 +98,27 @@ const App: React.FC = () => {
     const updatedItems = items.map((item) => ({
       category: item.category,
       tasks: item.tasks.map((task) =>
-        task.id === id ? { ...task, checked: !task.checked } : task
+        task.id === id ? { ...task, checked: !task.checked, closed: !task.closed } : task
       ),
     }));
     setItems(updatedItems);
 
   };
+
+  useEffect(() => {
+    const lockedCategoryIndex = items.findIndex(({category, tasks}) => tasks.some((task) => !task.checked));
+
+    if(lockedCategoryIndex === -1){
+
+    //   if(lockedCategory !== null && lockedCategoryIndex !== -1){
+    //   setLockedCategory(items[lockedCategoryIndex].category)
+    // }
+    setLockedCategory(null)
+  } else {
+    setLockedCategory(items[lockedCategoryIndex].category);
+  }
+
+  }, [items])
 
 
 
@@ -107,7 +134,7 @@ const App: React.FC = () => {
           {tasks.every((task) => task.checked) && <img src = {Icon} />}
         </div>
         <ul>
-          {tasks.map(({ id, task, checked }) => (
+          {tasks.map(({ id, task, checked, closed }) => (
             <li key={id}>
               <div className="task-item">
                 <input 
@@ -116,7 +143,8 @@ const App: React.FC = () => {
                 onChange={() => handleCheck(id)}
                 />
                 <label
-                onChange={() => handleCheck(id)}
+                className = {closed ? 'line-through-animation' : ''}
+                onClick={() => handleCheck(id)}
                 >{task}</label>
               </div>
             </li>
@@ -126,7 +154,15 @@ const App: React.FC = () => {
     ))}
    
     </div>
-    <button>Click Me</button>
+    {lockedCategory && (
+      <p>Next phase: {lockedCategory}</p>
+    )}
+<Link to = {lockedCategory ? '/' : '/complete'}>
+<button style = {{width: '10rem', height: '2rem', marginTop: '3rem'}} 
+disabled={lockedCategory !== null}
+>Finish</button>
+</Link>
+    
   </div>
 );
 
